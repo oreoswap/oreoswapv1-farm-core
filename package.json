@@ -1,0 +1,23 @@
+{
+  "name": "oreoswapv1-farm-core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^9.0.2",
+    "path": "^0.12.7",
+    "@pancakeswap/pancake-swap-lib": "^0.0.1"
+  },
+  "devDependencies": {
+    "truffle-hdwallet-provider": "^1.0.17"
+  }
+}
