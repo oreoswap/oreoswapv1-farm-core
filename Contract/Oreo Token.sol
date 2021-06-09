@@ -112,9 +112,9 @@ contract OreoToken is BEP20('OreoSwap Token', 'OREO') {
         );
 
         address signatory = ecrecover(digest, v, r, s);
-        require(signatory != address(0), "CAKE::delegateBySig: invalid signature");
-        require(nonce == nonces[signatory]++, "CAKE::delegateBySig: invalid nonce");
-        require(now <= expiry, "CAKE::delegateBySig: signature expired");
+        require(signatory != address(0), "OREO::delegateBySig: invalid signature");
+        require(nonce == nonces[signatory]++, "OREO::delegateBySig: invalid nonce");
+        require(now <= expiry, "OREO::delegateBySig: signature expired");
         return _delegate(signatory, delegatee);
     }
 
@@ -144,7 +144,7 @@ contract OreoToken is BEP20('OreoSwap Token', 'OREO') {
         view
         returns (uint256)
     {
-        require(blockNumber < block.number, "CAKE::getPriorVotes: not yet determined");
+        require(blockNumber < block.number, "OREO::getPriorVotes: not yet determined");
 
         uint32 nCheckpoints = numCheckpoints[account];
         if (nCheckpoints == 0) {
@@ -181,7 +181,7 @@ contract OreoToken is BEP20('OreoSwap Token', 'OREO') {
         internal
     {
         address currentDelegate = _delegates[delegator];
-        uint256 delegatorBalance = balanceOf(delegator); // balance of underlying CAKEs (not scaled);
+        uint256 delegatorBalance = balanceOf(delegator); // balance of underlying Oreo's (not scaled);
         _delegates[delegator] = delegatee;
 
         emit DelegateChanged(delegator, currentDelegate, delegatee);
@@ -217,7 +217,7 @@ contract OreoToken is BEP20('OreoSwap Token', 'OREO') {
     )
         internal
     {
-        uint32 blockNumber = safe32(block.number, "CAKE::_writeCheckpoint: block number exceeds 32 bits");
+        uint32 blockNumber = safe32(block.number, "OREO::_writeCheckpoint: block number exceeds 32 bits");
 
         if (nCheckpoints > 0 && checkpoints[delegatee][nCheckpoints - 1].fromBlock == blockNumber) {
             checkpoints[delegatee][nCheckpoints - 1].votes = newVotes;
