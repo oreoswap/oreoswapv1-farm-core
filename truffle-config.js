@@ -1,9 +1,10 @@
 const { enabled } = require("debug");
 const path = require("path");
 const HDWalletProvider = require("truffle-hdwallet-provider");
-require("dotenv").config();
+// require("dotenv").config();
 
-const mnemonic = 'tourist lion vintage width accident horror pistol pave defy category light mixed';
+const mnemonic = 'tourist lion vintage width accident ................'; //Replace with your secret key and run
+                                                                        // truffle migrate --reset --network testnet
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
@@ -32,7 +33,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "^0.6.2", // A version or constraint - Ex. "^0.5.0"
+      version: "^0.6.12", // A version or constraint - Ex. "^0.5.0"
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       settings: {          // See the solidity docs for advice about optimization and evmVersion
         optimizer: {
