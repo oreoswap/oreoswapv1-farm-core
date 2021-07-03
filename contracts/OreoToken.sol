@@ -1,14 +1,24 @@
-pragma solidity 0.6.12;
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.6.12;
 
 import "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/BEP20.sol";
 
 // OREOToken with Governance.
 contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
-    /// @notice Creates `_amount` token to `_to`. Must only be called by the owner (MasterChef).
-    function mint(address _to, uint256 _amount) public onlyOwner {
-        _mint(_to, _amount);
-        _moveDelegates(address(0), _delegates[_to], _amount);
+
+    uint256 constant public TOTALINITIALSUPPLY = 500_000_000 * (10**18);
+    uint256 minted;
+
+    struct Economics {
+        uint256 privateSale; //15%
+        uint256 preSale; //8%
+        uint256 marketing_treasury; //5%
+        uint256 teamToken; //5%
+        uint256 init_liquidity; //17%
+        uint256 liquidity_mining_pool; //50%
     }
+
+    Economics public tokenomics;
 
     // Copied and modified from YAM code:
     // https://github.com/yam-finance/yam-protocol/blob/master/contracts/token/YAMGovernanceStorage.sol
@@ -18,6 +28,9 @@ contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
 
     /// @notice A record of each accounts delegate
     mapping (address => address) internal _delegates;
+
+    ///@notice A record of token distribution
+    mapping (string => uint256) public tokenomics;
 
     /// @notice A checkpoint for marking number of votes from a given block
     struct Checkpoint {
@@ -46,6 +59,23 @@ contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
     /// @notice An event thats emitted when a delegate account's vote balance changes
     event DelegateVotesChanged(address indexed delegate, uint previousBalance, uint newBalance);
 
+    constructor () {
+        tokenomics.privateSale = (INITIALTOTALSUPPLY * 15)/100;
+        tokenomics.preSale = (INITIALTOTALSUPPLY * 8)/100;
+        tokenomics.marketing_treasury = (INITIALTOTALSUPPLY * 5)/100;
+        tokenomics.teamToken = (INITIALTOTALSUPPLY * 5)/100;
+        tokenomics.liquidity_mining_pool = (INITIALTOTALSUPPLY * 17)/100;
+    }
+
+
+    /// @notice Creates `_amount` token to `_to`. Must only be called by the owner (MasterChef).
+    function mint(address _to, uint256 _amount) public onlyOwner {
+        require(minted.add(_amount) <= TOTALINITIALSUPPLY, 'ADMIN: minted cannot exceed totalSupply');
+        _mint(_to, _amount);
+        minted.add(_amount);
+        _moveDelegates(address(0), _delegates[_to], _amount);
+    }
+    
     /**
      * @notice Delegate votes from `msg.sender` to `delegatee`
      * @param delegator The address to get delegatee for

@@ -1,4 +1,5 @@
-pragma solidity 0.6.12;
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.6.12;
 
 import "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/BEP20.sol";
 
@@ -27,7 +28,7 @@ contract MilkBar is BEP20('MilkBar Token', 'MILK') {
         oreo = _oreo;
     }
 
-    // Safe oreo transfer function, just in case if rounding error causes pool to not have enough oreos.
+    // Safeoreo transfer function, just in case if rounding error causes pool to not have enough oreos.
     function safeoreoTransfer(address _to, uint256 _amount) public onlyOwner {
         uint256 oreoBal = oreo.balanceOf(address(this));
         if (_amount > oreoBal) {
