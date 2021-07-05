@@ -1,14 +1,25 @@
-pragma solidity 0.6.12;
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.6.12;
 
 import "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/BEP20.sol";
 
-// CakeToken with Governance.
-contract CakeToken is BEP20('PancakeSwap Token', 'Cake') {
-    /// @notice Creates `_amount` token to `_to`. Must only be called by the owner (MasterChef).
-    function mint(address _to, uint256 _amount) public onlyOwner {
-        _mint(_to, _amount);
-        _moveDelegates(address(0), _delegates[_to], _amount);
+// OREOToken with Governance.
+contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
+
+    uint256 constant public INITIALTOTALSUPPLY = 500_000_000 * (10**18);
+    uint256 minted;
+
+    ///@dev Information on token distribution
+    struct Economics {
+        uint256 privateSale; //15%
+        uint256 preSale; //8%
+        uint256 marketing_treasury; //5%
+        uint256 teamToken; //5%
+        uint256 init_liquidity; //17%
+        uint256 liquidity_mining_pool; //50%
     }
+
+    Economics public tokenomics;
 
     // Copied and modified from YAM code:
     // https://github.com/yam-finance/yam-protocol/blob/master/contracts/token/YAMGovernanceStorage.sol
@@ -16,38 +27,55 @@ contract CakeToken is BEP20('PancakeSwap Token', 'Cake') {
     // Which is copied and modified from COMPOUND:
     // https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/Comp.sol
 
-    /// @notice A record of each accounts delegate
+    /// @dev A record of each accounts delegate
     mapping (address => address) internal _delegates;
 
-    /// @notice A checkpoint for marking number of votes from a given block
+    /// @dev A checkpoint for marking number of votes from a given block
     struct Checkpoint {
         uint32 fromBlock;
         uint256 votes;
     }
 
-    /// @notice A record of votes checkpoints for each account, by index
+    /// @dev A record of votes checkpoints for each account, by index
     mapping (address => mapping (uint32 => Checkpoint)) public checkpoints;
 
-    /// @notice The number of checkpoints for each account
+    /// @dev The number of checkpoints for each account
     mapping (address => uint32) public numCheckpoints;
 
-    /// @notice The EIP-712 typehash for the contract's domain
+    /// @dev The EIP-712 typehash for the contract's domain
     bytes32 public constant DOMAIN_TYPEHASH = keccak256("EIP712Domain(string name,uint256 chainId,address verifyingContract)");
 
-    /// @notice The EIP-712 typehash for the delegation struct used by the contract
+    /// @dev The EIP-712 typehash for the delegation struct used by the contract
     bytes32 public constant DELEGATION_TYPEHASH = keccak256("Delegation(address delegatee,uint256 nonce,uint256 expiry)");
 
-    /// @notice A record of states for signing / validating signatures
+    /// @dev A record of states for signing / validating signatures
     mapping (address => uint) public nonces;
 
-      /// @notice An event thats emitted when an account changes its delegate
+      /// @dev An event thats emitted when an account changes its delegate
     event DelegateChanged(address indexed delegator, address indexed fromDelegate, address indexed toDelegate);
 
-    /// @notice An event thats emitted when a delegate account's vote balance changes
+    /// @dev An event thats emitted when a delegate account's vote balance changes
     event DelegateVotesChanged(address indexed delegate, uint previousBalance, uint newBalance);
 
+    constructor () public {
+        tokenomics.privateSale = (INITIALTOTALSUPPLY * 15)/100;
+        tokenomics.preSale = (INITIALTOTALSUPPLY * 8)/100;
+        tokenomics.marketing_treasury = (INITIALTOTALSUPPLY * 5)/100;
+        tokenomics.teamToken = (INITIALTOTALSUPPLY * 5)/100;
+        tokenomics.liquidity_mining_pool = (INITIALTOTALSUPPLY * 17)/100;
+    }
+
+
+    /// @dev Creates `_amount` token to `_to`. Must only be called by the owner (MasterChef).
+    function mint(address _to, uint256 _amount) public onlyOwner {
+        require(minted.add(_amount) <= INITIALTOTALSUPPLY, 'ADMIN: minted cannot exceed totalSupply');
+        _mint(_to, _amount);
+        minted.add(_amount);
+        _moveDelegates(address(0), _delegates[_to], _amount);
+    }
+    
     /**
-     * @notice Delegate votes from `msg.sender` to `delegatee`
+     * @dev Delegate votes from `msg.sender` to `delegatee`
      * @param delegator The address to get delegatee for
      */
     function delegates(address delegator)
@@ -59,7 +87,7 @@ contract CakeToken is BEP20('PancakeSwap Token', 'Cake') {
     }
 
    /**
-    * @notice Delegate votes from `msg.sender` to `delegatee`
+    * @dev Delegate votes from `msg.sender` to `delegatee`
     * @param delegatee The address to delegate votes to
     */
     function delegate(address delegatee) external {
@@ -67,7 +95,7 @@ contract CakeToken is BEP20('PancakeSwap Token', 'Cake') {
     }
 
     /**
-     * @notice Delegates votes from signatory to `delegatee`
+     * @dev Delegates votes from signatory to `delegatee`
      * @param delegatee The address to delegate votes to
      * @param nonce The contract state required to match the signature
      * @param expiry The time at which to expire the signature
@@ -112,14 +140,14 @@ contract CakeToken is BEP20('PancakeSwap Token', 'Cake') {
         );
 
         address signatory = ecrecover(digest, v, r, s);
-        require(signatory != address(0), "CAKE::delegateBySig: invalid signature");
-        require(nonce == nonces[signatory]++, "CAKE::delegateBySig: invalid nonce");
-        require(now <= expiry, "CAKE::delegateBySig: signature expired");
+        require(signatory != address(0), "OREO::delegateBySig: invalid signature");
+        require(nonce == nonces[signatory]++, "OREO::delegateBySig: invalid nonce");
+        require(now <= expiry, "OREO::delegateBySig: signature expired");
         return _delegate(signatory, delegatee);
     }
 
     /**
-     * @notice Gets the current votes balance for `account`
+     * @dev Gets the current votes balance for `account`
      * @param account The address to get votes balance
      * @return The number of current votes for `account`
      */
@@ -133,7 +161,7 @@ contract CakeToken is BEP20('PancakeSwap Token', 'Cake') {
     }
 
     /**
-     * @notice Determine the prior number of votes for an account as of a block number
+     * @dev Determine the prior number of votes for an account as of a block number
      * @dev Block number must be a finalized block or else this function will revert to prevent misinformation.
      * @param account The address of the account to check
      * @param blockNumber The block number to get the vote balance at
@@ -144,7 +172,7 @@ contract CakeToken is BEP20('PancakeSwap Token', 'Cake') {
         view
         returns (uint256)
     {
-        require(blockNumber < block.number, "CAKE::getPriorVotes: not yet determined");
+        require(blockNumber < block.number, "OREO::getPriorVotes: not yet determined");
 
         uint32 nCheckpoints = numCheckpoints[account];
         if (nCheckpoints == 0) {
@@ -181,7 +209,7 @@ contract CakeToken is BEP20('PancakeSwap Token', 'Cake') {
         internal
     {
         address currentDelegate = _delegates[delegator];
-        uint256 delegatorBalance = balanceOf(delegator); // balance of underlying CAKEs (not scaled);
+        uint256 delegatorBalance = balanceOf(delegator); // balance of underlying OREOs (not scaled);
         _delegates[delegator] = delegatee;
 
         emit DelegateChanged(delegator, currentDelegate, delegatee);
@@ -217,7 +245,7 @@ contract CakeToken is BEP20('PancakeSwap Token', 'Cake') {
     )
         internal
     {
-        uint32 blockNumber = safe32(block.number, "CAKE::_writeCheckpoint: block number exceeds 32 bits");
+        uint32 blockNumber = safe32(block.number, "OREO::_writeCheckpoint: block number exceeds 32 bits");
 
         if (nCheckpoints > 0 && checkpoints[delegatee][nCheckpoints - 1].fromBlock == blockNumber) {
             checkpoints[delegatee][nCheckpoints - 1].votes = newVotes;

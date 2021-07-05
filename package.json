@@ -6,18 +6,20 @@
   "directories": {
     "test": "test"
   },
+  "dependencies": {},
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bobeu/oreoswapv1-farm-core.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "dotenv": "^9.0.2",
-    "path": "^0.12.7",
-    "@pancakeswap/pancake-swap-lib": "^0.0.1"
+  "bugs": {
+    "url": "https://github.com/bobeu/oreoswapv1-farm-core/issues"
   },
-  "devDependencies": {
-    "truffle-hdwallet-provider": "^1.0.17"
-  }
+  "homepage": "https://github.com/bobeu/oreoswapv1-farm-core#readme"
 }
