@@ -1,4 +1,6 @@
-pragma solidity 0.6.12;
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.6.12;
 
 import "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/BEP20.sol";
 
@@ -50,11 +52,7 @@ contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
      * @notice Delegate votes from `msg.sender` to `delegatee`
      * @param delegator The address to get delegatee for
      */
-    function delegates(address delegator)
-        external
-        view
-        returns (address)
-    {
+    function delegates(address delegator) external view returns (address) {
         return _delegates[delegator];
     }
 
@@ -114,7 +112,7 @@ contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
         address signatory = ecrecover(digest, v, r, s);
         require(signatory != address(0), "OREO::delegateBySig: invalid signature");
         require(nonce == nonces[signatory]++, "OREO::delegateBySig: invalid nonce");
-        require(now <= expiry, "OREO::delegateBySig: signature expired");
+        require(block.timestamp <= expiry, "OREO::delegateBySig: signature expired");
         return _delegate(signatory, delegatee);
     }
 

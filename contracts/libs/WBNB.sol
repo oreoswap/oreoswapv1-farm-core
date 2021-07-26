@@ -1,4 +1,6 @@
-pragma solidity >0.4.18;
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.6.0;
 
 contract WBNB {
     string public name     = "Wrapped BNB";
@@ -23,7 +25,7 @@ contract WBNB {
     function withdraw(uint wad) public {
         require(balanceOf[msg.sender] >= wad);
         balanceOf[msg.sender] -= wad;
-        msg.sender.transfer(wad);
+        payable(msg.sender).transfer(wad);
         emit Withdrawal(msg.sender, wad);
     }
 
@@ -47,7 +49,7 @@ contract WBNB {
     {
         require(balanceOf[src] >= wad);
 
-        if (src != msg.sender && allowance[src][msg.sender] != uint(-1)) {
+        if (src != msg.sender && allowance[src][msg.sender] != type(uint256).max) {
             require(allowance[src][msg.sender] >= wad);
             allowance[src][msg.sender] -= wad;
         }
@@ -55,7 +57,7 @@ contract WBNB {
         balanceOf[src] -= wad;
         balanceOf[dst] += wad;
 
-        Transfer(src, dst, wad);
+        emit Transfer(src, dst, wad);
 
         return true;
     }

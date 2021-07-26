@@ -1,4 +1,6 @@
-pragma solidity 0.6.12;
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.6.12;
 
 import '@pancakeswap/pancake-swap-lib/contracts/math/SafeMath.sol';
 import '@pancakeswap/pancake-swap-lib/contracts/token/BEP20/IBEP20.sol';
@@ -8,17 +10,15 @@ import '@pancakeswap/pancake-swap-lib/contracts/access/Ownable.sol';
 import "./OreoToken.sol";
 import "./MilkBar.sol";
 
-// import "@nomiclabs/buidler/console.sol";
-
 interface IMigratorChef {
-    // Perform LP token migration from legacy PanoreoSwap to oreoSwap.
+    // Perform LP token migration from legacy OreoSwap to oreoSwap.
     // Take the current LP token address and return the new LP token address.
     // Migrator should have full access to the caller's LP token.
     // Return the new LP token address.
     //
-    // XXX Migrator must have allowance access to PanoreoSwap LP tokens.
-    // oreoSwap must mint EXACTLY the same amount of oreoSwap LP tokens or
-    // else something bad will happen. Traditional PanoreoSwap does not
+    // XXX Migrator must have allowance access to OreoSwap LP tokens.
+    // OreoSwap must mint EXACTLY the same amount of OreoSwap LP tokens or
+    // else something bad will happen. Traditional OreoSwap does not
     // do that so be careful!
     function migrate(IBEP20 token) external returns (IBEP20);
 }
@@ -39,10 +39,10 @@ contract MasterChef is Ownable {
         uint256 amount;     // How many LP tokens the user has provided.
         uint256 rewardDebt; // Reward debt. See explanation below.
         //
-        // We do some fancy math here. Basically, any point in time, the amount of oreos
+        // We do some fancy math here. Basically, any point in time, the amount of Oreos
         // entitled to a user but is pending to be distributed is:
         //
-        //   pending reward = (user.amount * pool.accoreoPerShare) - user.rewardDebt
+        //   pending reward = (user.amount * pool.accOreoPerShare) - user.rewardDebt
         //
         // Whenever a user deposits or withdraws LP tokens to a pool. Here's what happens:
         //   1. The pool's `accoreoPerShare` (and `lastRewardBlock`) gets updated.
@@ -173,7 +173,7 @@ contract MasterChef is Ownable {
         IBEP20 lpToken = pool.lpToken;
         uint256 bal = lpToken.balanceOf(address(this));
         lpToken.safeApprove(address(migrator), bal);
-        IBEP20 newLpToken = migrator.migrate(lpToken);
+        IBEP20 newLpToken = migrator.migrate(lpToken); // < =================== This is confusing. There's a bug here (Bob)
         require(bal == newLpToken.balanceOf(address(this)), "migrate: bad");
         pool.lpToken = newLpToken;
     }
