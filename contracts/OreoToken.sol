@@ -3,39 +3,14 @@ pragma solidity ^0.8.0;
 
 import "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/BEP20.sol";
 
-import "./OreoToken.sol";
+// CakeToken with Governance.
+contract OreoToken is BEP20('OreoSwap Token', 'OREO') {
 
-// SyrupBar with Governance.
-contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
-    /// @notice Creates `_amount` token to `_to`. Must only be called by the owner (MasterChef).
+    /// @notice Creates `_amount` token to `_to`. Must only be called by the owner (PastryChef).
+
     function mint(address _to, uint256 _amount) public onlyOwner {
         _mint(_to, _amount);
         _moveDelegates(address(0), _delegates[_to], _amount);
-    }
-
-    function burn(address _from ,uint256 _amount) public onlyOwner {
-        _burn(_from, _amount);
-        _moveDelegates(_delegates[_from], address(0), _amount);
-    }
-
-    // The CAKE TOKEN!
-    CakeToken public cake;
-
-
-    constructor(
-        CakeToken _cake
-    ) public {
-        cake = _cake;
-    }
-
-    // Safe cake transfer function, just in case if rounding error causes pool to not have enough CAKEs.
-    function safeCakeTransfer(address _to, uint256 _amount) public onlyOwner {
-        uint256 cakeBal = cake.balanceOf(address(this));
-        if (_amount > cakeBal) {
-            cake.transfer(_to, cakeBal);
-        } else {
-            cake.transfer(_to, _amount);
-        }
     }
 
     // Copied and modified from YAM code:
@@ -45,6 +20,7 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
     // https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/Comp.sol
 
     /// @notice A record of each accounts delegate
+
     mapping (address => address) internal _delegates;
 
     /// @notice A checkpoint for marking number of votes from a given block
@@ -55,6 +31,7 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
 
     /// @notice A record of votes checkpoints for each account, by index
     mapping (address => mapping (uint32 => Checkpoint)) public checkpoints;
+
 
     /// @notice The number of checkpoints for each account
     mapping (address => uint32) public numCheckpoints;
@@ -74,12 +51,7 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
     /// @notice An event thats emitted when a delegate account's vote balance changes
     event DelegateVotesChanged(address indexed delegate, uint previousBalance, uint newBalance);
 
-    /**
-     * @notice Delegate votes from `msg.sender` to `delegatee`
-     * @param delegator The address to get delegatee for
-     */
-    function delegates(address delegator)
-        external
+    /**DELEGATION_TYPEHASH
         view
         returns (address)
     {
@@ -117,7 +89,7 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
             abi.encode(
                 DOMAIN_TYPEHASH,
                 keccak256(bytes(name())),
-                getChainId(),
+               block.chainId,
                 address(this)
             )
         );
@@ -140,9 +112,9 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
         );
 
         address signatory = ecrecover(digest, v, r, s);
-        require(signatory != address(0), "CAKE::delegateBySig: invalid signature");
-        require(nonce == nonces[signatory]++, "CAKE::delegateBySig: invalid nonce");
-        require(now <= expiry, "CAKE::delegateBySig: signature expired");
+        require(signatory != address(0), "OREO::delegateBySig: invalid signature");
+        require(nonce == nonces[signatory]++, "OREO::delegateBySig: invalid nonce");
+        require(block.timestamp <= expiry, "OREO::delegateBySig: signature expired");
         return _delegate(signatory, delegatee);
     }
 
@@ -172,7 +144,7 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
         view
         returns (uint256)
     {
-        require(blockNumber < block.number, "CAKE::getPriorVotes: not yet determined");
+        require(blockNumber < block.number, "OREO::getPriorVotes: not yet determined");
 
         uint32 nCheckpoints = numCheckpoints[account];
         if (nCheckpoints == 0) {
@@ -205,6 +177,12 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
         return checkpoints[account][lower].votes;
     }
 
+
+     /**
+     * @notice it delegates vote from the delegator to the delegatee
+     * @param delegator The address giving their delegating their vote
+     * @param delegatee The address giving out their 
+     */
     function _delegate(address delegator, address delegatee)
         internal
     {
@@ -245,7 +223,7 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
     )
         internal
     {
-        uint32 blockNumber = safe32(block.number, "CAKE::_writeCheckpoint: block number exceeds 32 bits");
+        uint32 blockNumber = safe32(block.number, "OREO::_writeCheckpoint: block number exceeds 32 bits");
 
         if (nCheckpoints > 0 && checkpoints[delegatee][nCheckpoints - 1].fromBlock == blockNumber) {
             checkpoints[delegatee][nCheckpoints - 1].votes = newVotes;
@@ -262,9 +240,9 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
         return uint32(n);
     }
 
-    function getChainId() internal pure returns (uint) {
-        uint256 chainId;
-        assembly { chainId := chainid() }
-        return chainId;
-    }
+    // function getChainId() internal pure returns (uint) {
+    //     uint256 chainId;
+    //     assembly { chainId := chainid() }
+    //     return chainId;
+    // }
 }

@@ -1,4 +1,5 @@
-pragma solidity 0.6.12;
+//SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.0;
 
 import "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/BEP20.sol";
 
