@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.6.12;
+pragma solidity ^0.8.0;
 
 import '@pancakeswap/pancake-swap-lib/contracts/token/BEP20/IBEP20.sol';
 import '@pancakeswap/pancake-swap-lib/contracts/token/BEP20/SafeBEP20.sol';
@@ -21,12 +21,11 @@ contract LotteryRewardPool is Ownable {
         MasterChef _chef,
         IBEP20 _oreo,
         address _admin,
-        address _receiver
-    ) public {
-        chef = _chef;
-        oreo = _oreo;
-        adminAddress = _admin;
-        receiver = _receiver;
+        address _receiver) {
+            chef = _chef;
+            oreo = _oreo;
+            adminAddress = _admin;
+            receiver = _receiver;
     }
 
     event StartFarming(address indexed user, uint256 indexed pid);

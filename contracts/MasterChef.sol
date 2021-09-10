@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.6.12;
+pragma solidity ^0.8.0;
 
 import '@pancakeswap/pancake-swap-lib/contracts/math/SafeMath.sol';
 import '@pancakeswap/pancake-swap-lib/contracts/token/BEP20/IBEP20.sol';
@@ -90,23 +90,22 @@ contract MasterChef is Ownable {
         MilkBar _milk,
         address _devaddr,
         uint256 _oreoPerBlock,
-        uint256 _startBlock
-    ) public {
-        oreo = _oreo;
-        milk = _milk;
-        devaddr = _devaddr;
-        oreoPerBlock = _oreoPerBlock;
-        startBlock = _startBlock;
+        uint256 _startBlock){
+            oreo = _oreo;
+            milk = _milk;
+            devaddr = _devaddr;
+            oreoPerBlock = _oreoPerBlock;
+            startBlock = _startBlock;
 
-        // staking pool
-        poolInfo.push(PoolInfo({
-            lpToken: _oreo,
-            allocPoint: 1000,
-            lastRewardBlock: startBlock,
-            accoreoPerShare: 0
-        }));
+            // staking pool
+            poolInfo.push(PoolInfo({
+                lpToken: _oreo,
+                allocPoint: 1000,
+                lastRewardBlock: startBlock,
+                accoreoPerShare: 0
+            }));
 
-        totalAllocPoint = 1000;
+            totalAllocPoint = 1000;
 
     }
 

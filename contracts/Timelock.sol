@@ -11,7 +11,7 @@
 // XXX: pragma solidity ^0.5.16;
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.6.12;
+pragma solidity ^0.8.0;
 
 // XXX: import "./SafeMath.sol";
 import "@pancakeswap/pancake-swap-lib/contracts/math/SafeMath.sol";
@@ -38,7 +38,7 @@ contract Timelock {
     mapping (bytes32 => bool) public queuedTransactions;
 
 
-    constructor(address admin_, uint delay_) public {
+    constructor(address admin_, uint delay_) {
         require(delay_ >= MINIMUM_DELAY, "Timelock::constructor: Delay must exceed minimum delay.");
         require(delay_ <= MAXIMUM_DELAY, "Timelock::constructor: Delay must not exceed maximum delay.");
 

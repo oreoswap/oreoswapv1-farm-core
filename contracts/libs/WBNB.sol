@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.6.0;
+pragma solidity ^0.8.0;
 
 contract WBNB {
     string public name     = "Wrapped BNB";
@@ -12,8 +12,8 @@ contract WBNB {
     event  Deposit(address indexed dst, uint wad);
     event  Withdrawal(address indexed src, uint wad);
 
-    mapping (address => uint)                       public  balanceOf;
-    mapping (address => mapping (address => uint))  public  allowance;
+    mapping (address => uint) public balanceOf;
+    mapping (address => mapping (address => uint)) public allowance;
 
     function a() public payable {
         deposit();

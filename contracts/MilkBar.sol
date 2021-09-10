@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.6.12;
+pragma solidity ^0.8.0;
 
 import "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/BEP20.sol";
-
 import "./OreoToken.sol";
 
 // SyrupBar with Governance.
 contract MilkBar is BEP20('MilkBar Token', 'MILK') {
-
-    constructor(OreoToken _oreo) public {
+    using SafeMath for uint256;
+    constructor(OreoToken _oreo) {
         oreo = _oreo;
     }
 
@@ -141,7 +140,7 @@ contract MilkBar is BEP20('MilkBar Token', 'MILK') {
         address signatory = ecrecover(digest, v, r, s);
         require(signatory != address(0), "oreo::delegateBySig: invalid signature");
         require(nonce == nonces[signatory]++, "oreo::delegateBySig: invalid nonce");
-        require(now <= expiry, "oreo::delegateBySig: signature expired");
+        require(block.timestamp <= expiry, "oreo::delegateBySig: signature expired");
         return _delegate(signatory, delegatee);
     }
 
@@ -261,9 +260,9 @@ contract MilkBar is BEP20('MilkBar Token', 'MILK') {
         return uint32(n);
     }
 
-    function getChainId() internal pure returns (uint) {
+    function getChainId() internal view returns (uint) {
         uint256 chainId;
-        assembly { chainId := chainid() }
+        assembly { chainId := chainId }
         return chainId;
     }
 }
