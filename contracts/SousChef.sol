@@ -1,10 +1,10 @@
-pragma solidity 0.6.12;
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.0;
 
 import '@pancakeswap/pancake-swap-lib/contracts/math/SafeMath.sol';
 import '@pancakeswap/pancake-swap-lib/contracts/token/BEP20/IBEP20.sol';
 import '@pancakeswap/pancake-swap-lib/contracts/token/BEP20/SafeBEP20.sol';
-
-// import "@nomiclabs/buidler/console.sol";
 
 // SousChef is the chef of new tokens. He can make yummy food and he is a fair guy as well as MasterChef.
 contract SousChef {
@@ -62,18 +62,17 @@ contract SousChef {
         IBEP20 _syrup,
         uint256 _rewardPerBlock,
         uint256 _startBlock,
-        uint256 _endBlock
-    ) public {
-        syrup = _syrup;
-        rewardPerBlock = _rewardPerBlock;
-        startBlock = _startBlock;
-        bonusEndBlock = _endBlock;
+        uint256 _endBlock) {
+            syrup = _syrup;
+            rewardPerBlock = _rewardPerBlock;
+            startBlock = _startBlock;
+            bonusEndBlock = _endBlock;
 
-        // staking pool
-        poolInfo = PoolInfo({
-            lastRewardBlock: startBlock,
-            accRewardPerShare: 0
-        });
+            // staking pool
+            poolInfo = PoolInfo({
+                lastRewardBlock: startBlock,
+                accRewardPerShare: 0
+            });
     }
 
     function addressLength() external view returns (uint256) {

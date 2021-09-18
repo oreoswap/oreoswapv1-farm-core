@@ -1,11 +1,11 @@
-pragma solidity 0.6.12;
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.0;
 
 import '@pancakeswap/pancake-swap-lib/contracts/math/SafeMath.sol';
 import '@pancakeswap/pancake-swap-lib/contracts/token/BEP20/IBEP20.sol';
 import '@pancakeswap/pancake-swap-lib/contracts/token/BEP20/SafeBEP20.sol';
 import '@pancakeswap/pancake-swap-lib/contracts/access/Ownable.sol';
-
-// import "@nomiclabs/buidler/console.sol";
 
 interface IWBNB {
     function deposit() external payable;
@@ -27,23 +27,23 @@ contract BnbStaking is Ownable {
     // Info of each pool.
     struct PoolInfo {
         IBEP20 lpToken;           // Address of LP token contract.
-        uint256 allocPoint;       // How many allocation points assigned to this pool. CAKEs to distribute per block.
-        uint256 lastRewardBlock;  // Last block number that CAKEs distribution occurs.
-        uint256 accCakePerShare; // Accumulated CAKEs per share, times 1e12. See below.
+        uint256 allocPoint;       // How many allocation points assigned to this pool. Oreos to distribute per block.
+        uint256 lastRewardBlock;  // Last block number that Oreos distribution occurs.
+        uint256 accOreoPerShare; // Accumulated Oreos per share, times 1e12. See below.
     }
 
-    // The REWARD TOKEN
-    IBEP20 public rewardToken;
+    // The REWARD TOKEN          //NOTE address of Oreotoken
+    IBEP20 public rewardToken;  
 
     // adminAddress
     address public adminAddress;
 
-
     // WBNB
-    address public immutable WBNB;
+    address public immutable WBNB; //WRAP BNB address -- created from WBNB.sol NOTE We created WBNB to make it easier tracking
+                                    // users' deposit and not dealing directly with BNB
 
-    // CAKE tokens created per block.
-    uint256 public rewardPerBlock;
+    // OREOtokens created per block.
+    uint256 public rewardPerBlock;  //To be determined.
 
     // Info of each pool.
     PoolInfo[] public poolInfo;
@@ -53,9 +53,9 @@ contract BnbStaking is Ownable {
     uint256 public limitAmount = 10000000000000000000;
     // Total allocation poitns. Must be the sum of all allocation points in all pools.
     uint256 public totalAllocPoint = 0;
-    // The block number when CAKE mining starts.
+    // The block number when OREOmining starts.
     uint256 public startBlock;
-    // The block number when CAKE mining ends.
+    // The block number when OREOmining ends.
     uint256 public bonusEndBlock;
 
     event Deposit(address indexed user, uint256 amount);
@@ -63,14 +63,14 @@ contract BnbStaking is Ownable {
     event EmergencyWithdraw(address indexed user, uint256 amount);
 
     constructor(
-        IBEP20 _lp,
-        IBEP20 _rewardToken,
-        uint256 _rewardPerBlock,
-        uint256 _startBlock,
-        uint256 _bonusEndBlock,
+        IBEP20 _lp, //NOTE When user stakes BNB, they're given LP tokens which represents their share of the pool.
+        IBEP20 _rewardToken, //NOTE After providing liquidity, gets LP token, they earn reward in this token.
+        uint256 _rewardPerBlock, //How much reward is earned per block.
+        uint256 _startBlock, //@dev sets the block number when bonus should begin.
+        uint256 _bonusEndBlock, //@dev sets the block number when bonus ends.
         address _adminAddress,
-        address _wbnb
-    ) public {
+        address _wbnb  //@dev sets WBNB address
+    ) {
         rewardToken = _rewardToken;
         rewardPerBlock = _rewardPerBlock;
         startBlock = _startBlock;
@@ -78,21 +78,21 @@ contract BnbStaking is Ownable {
         adminAddress = _adminAddress;
         WBNB = _wbnb;
 
-        // staking pool
+        // staking pool   ON DEPLOYMENT, AT THE CONSTRUCTOR, WE INITIALIZED OR CREATE A POOL FOR ALL.
         poolInfo.push(PoolInfo({
-            lpToken: _lp,
-            allocPoint: 1000,
-            lastRewardBlock: startBlock,
-            accCakePerShare: 0
+            lpToken: _lp, //WE SET LP TOKEN ADDRESS i.e MILKBAR TOKEN ADDRESS.
+            allocPoint: 1000, //@dev SETS ALLOCATION POINT TO 1000
+            lastRewardBlock: startBlock, //OBVIOUSLY, THE LAST BLOCK WHICH REWARD WAS DISTRIBUTED WILL BE THE STARTING BLOCK.
+            accOreoPerShare: 0
         }));
 
-        totalAllocPoint = 1000;
+        totalAllocPoint = 1000;  //WE INITIALIZED TOTAL ALLOCATION POINT TO THE TOTAL OF ALL ALLOCATION POINTS IN THE POOL
 
     }
 
     modifier onlyAdmin() {
-        require(msg.sender == adminAddress, "admin: wut?");
-        _;
+        require(msg.sender == adminAddress, "admin: wut?"); // WE WILL NOT ACCEPT BNB TRANSFER FROM OUTSIDE WORLRD EXCEPT
+        _;                                                  // FROM ADMIN, ELSE POOL WILL BE MESSED UP.
     }
 
     receive() external payable {
@@ -113,33 +113,33 @@ contract BnbStaking is Ownable {
     }
 
     // Set the limit amount. Can only be called by the owner.
-    function setLimitAmount(uint256 _amount) public onlyOwner {
+    function setLimitAmount(uint256 _amount) public onlyOwner {  //WE CAN UPDATE THE INITIAL BNB STAKING LIMIT SET.
         limitAmount = _amount;
     }
 
-    // Return reward multiplier over the given _from to _to block.
+    // Return reward multiplier over the given starting block (_from) to current block(_to).
     function getMultiplier(uint256 _from, uint256 _to) public view returns (uint256) {
-        if (_to <= bonusEndBlock) {
-            return _to.sub(_from);
-        } else if (_from >= bonusEndBlock) {
-            return 0;
-        } else {
+        if (_to <= bonusEndBlock) {  //If the current block is less or same with the block from which reward was distributed,
+            return _to.sub(_from);   // then subtract the starting block from the current block and return it.
+        } else if (_from >= bonusEndBlock) { //An example: say: bonusEndBlock = 1234577, _fromBlock = 1234570, _toBlock = 1234576 
+            return 0;                       // Multiplier = _toBlock - _fromBlock i.e 1234576 - 1234570  
+        } else {                            // M = 6;
             return bonusEndBlock.sub(_from);
         }
     }
 
-    // View function to see pending Reward on frontend.
+    // View function to see pending Reward for a single user in the pool on the frontend.
     function pendingReward(address _user) external view returns (uint256) {
         PoolInfo storage pool = poolInfo[0];
         UserInfo storage user = userInfo[_user];
-        uint256 accCakePerShare = pool.accCakePerShare;
-        uint256 lpSupply = pool.lpToken.balanceOf(address(this));
+        uint256 accOreoPerShare = pool.accOreoPerShare; // We get the accumulated Oreopershare from the pool
+        uint256 lpSupply = pool.lpToken.balanceOf(address(this)); // Get the total Liquidity provider token in this contract
         if (block.number > pool.lastRewardBlock && lpSupply != 0) {
             uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
             uint256 cakeReward = multiplier.mul(rewardPerBlock).mul(pool.allocPoint).div(totalAllocPoint);
-            accCakePerShare = accCakePerShare.add(cakeReward.mul(1e12).div(lpSupply));
+            accOreoPerShare = accOreoPerShare.add(cakeReward.mul(1e12).div(lpSupply));
         }
-        return user.amount.mul(accCakePerShare).div(1e12).sub(user.rewardDebt);
+        return user.amount.mul(accOreoPerShare).div(1e12).sub(user.rewardDebt);
     }
 
     // Update reward variables of the given pool to be up-to-date.
@@ -155,7 +155,7 @@ contract BnbStaking is Ownable {
         }
         uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
         uint256 cakeReward = multiplier.mul(rewardPerBlock).mul(pool.allocPoint).div(totalAllocPoint);
-        pool.accCakePerShare = pool.accCakePerShare.add(cakeReward.mul(1e12).div(lpSupply));
+        pool.accOreoPerShare = pool.accOreoPerShare.add(cakeReward.mul(1e12).div(lpSupply));
         pool.lastRewardBlock = block.number;
     }
 
@@ -178,7 +178,7 @@ contract BnbStaking is Ownable {
 
         updatePool(0);
         if (user.amount > 0) {
-            uint256 pending = user.amount.mul(pool.accCakePerShare).div(1e12).sub(user.rewardDebt);
+            uint256 pending = user.amount.mul(pool.accOreoPerShare).div(1e12).sub(user.rewardDebt);
             if(pending > 0) {
                 rewardToken.safeTransfer(address(msg.sender), pending);
             }
@@ -188,7 +188,7 @@ contract BnbStaking is Ownable {
             assert(IWBNB(WBNB).transfer(address(this), msg.value));
             user.amount = user.amount.add(msg.value);
         }
-        user.rewardDebt = user.amount.mul(pool.accCakePerShare).div(1e12);
+        user.rewardDebt = user.amount.mul(pool.accOreoPerShare).div(1e12);
 
         emit Deposit(msg.sender, msg.value);
     }
@@ -205,7 +205,7 @@ contract BnbStaking is Ownable {
         UserInfo storage user = userInfo[msg.sender];
         require(user.amount >= _amount, "withdraw: not good");
         updatePool(0);
-        uint256 pending = user.amount.mul(pool.accCakePerShare).div(1e12).sub(user.rewardDebt);
+        uint256 pending = user.amount.mul(pool.accOreoPerShare).div(1e12).sub(user.rewardDebt);
         if(pending > 0 && !user.inBlackList) {
             rewardToken.safeTransfer(address(msg.sender), pending);
         }
@@ -214,7 +214,7 @@ contract BnbStaking is Ownable {
             IWBNB(WBNB).withdraw(_amount);
             safeTransferBNB(address(msg.sender), _amount);
         }
-        user.rewardDebt = user.amount.mul(pool.accCakePerShare).div(1e12);
+        user.rewardDebt = user.amount.mul(pool.accOreoPerShare).div(1e12);
 
         emit Withdraw(msg.sender, _amount);
     }

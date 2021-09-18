@@ -13,9 +13,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@pancakeswap/pancake-swap-lib": "^0.0.1",
+    "@uniswap/lib": "^4.0.1-alpha",
     "dotenv": "^9.0.2",
-    "path": "^0.12.7",
-    "@pancakeswap/pancake-swap-lib": "^0.0.1"
+    "path": "^0.12.7"
   },
   "devDependencies": {
     "truffle-hdwallet-provider": "^1.0.17"
