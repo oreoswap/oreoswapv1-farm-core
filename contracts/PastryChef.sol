@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.0;
 
-import '@pancakeswap/pancake-swap-lib/contracts/math/SafeMath.sol';
-import '@pancakeswap/pancake-swap-lib/contracts/token/BEP20/IBEP20.sol';
-import '@pancakeswap/pancake-swap-lib/contracts/token/BEP20/SafeBEP20.sol';
-import '@pancakeswap/pancake-swap-lib/contracts/access/Ownable.sol';
+import './oreoswap-lib/SafeMath.sol';
+import './oreoswap-lib/IBEP20.sol';
+import './oreoswap-lib/SafeBEP20.sol';
+import './oreoswap-lib/Ownable.sol';
 
 import "./OreoToken.sol";
 import "./MilkBar.sol";
@@ -30,7 +30,7 @@ interface IMigratorChef {
 // distributed and the community can show to govern itself.
 //
 // Have fun reading it. Hopefully it's bug-free. God bless.
-contract MasterChef is Ownable {
+contract PastryChef is Ownable {
     using SafeMath for uint256;
     using SafeBEP20 for IBEP20;
 

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/BEP20.sol";
+import "./oreoswap-lib/BEP20.sol";
 import "./OreoToken.sol";
 
 // SyrupBar with Governance.
@@ -42,7 +42,7 @@ contract MilkBar is BEP20('MilkBar Token', 'MILK') {
     // Which is copied and modified from COMPOUND:
     // https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/Comp.sol
 
-    /// @notice A record of each accounts delegate
+    // @notice A record of each accounts delegate
     mapping (address => address) internal _delegates;
 
     /// @notice A checkpoint for marking number of votes from a given block
@@ -115,7 +115,7 @@ contract MilkBar is BEP20('MilkBar Token', 'MILK') {
             abi.encode(
                 DOMAIN_TYPEHASH,
                 keccak256(bytes(name())),
-                getChainId(),
+                block.chainid,
                 address(this)
             )
         );
@@ -260,9 +260,9 @@ contract MilkBar is BEP20('MilkBar Token', 'MILK') {
         return uint32(n);
     }
 
-    function getChainId() internal view returns (uint) {
-        uint256 chainId;
-        assembly { chainId := chainId }
-        return chainId;
-    }
+    // function getChainId() internal view returns (uint) {
+    //     uint256 chainId;
+    //     assembly { chainId := chainId }
+    //     return chainId;
+    // }
 }
