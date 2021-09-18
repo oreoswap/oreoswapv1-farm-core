@@ -18,23 +18,23 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
         _moveDelegates(_delegates[_from], address(0), _amount);
     }
 
-    // The CAKE TOKEN!
-    CakeToken public cake;
+    // The OREO TOKEN!
+    OreoToken public oreo;
 
 
     constructor(
-        CakeToken _cake
+        OreoToken _oreo
     ) public {
-        cake = _cake;
+        oreo = _oreo;
     }
 
-    // Safe cake transfer function, just in case if rounding error causes pool to not have enough CAKEs.
-    function safeCakeTransfer(address _to, uint256 _amount) public onlyOwner {
-        uint256 cakeBal = cake.balanceOf(address(this));
-        if (_amount > cakeBal) {
-            cake.transfer(_to, cakeBal);
+    // Safe oreo transfer function, just in case if rounding error causes pool to not have enough oreos.
+    function safeOreoTransfer(address _to, uint256 _amount) public onlyOwner {
+        uint256 oreoBal = oreo.balanceOf(address(this));
+        if (_amount > oreoBal) {
+            oreo.transfer(_to, oreoBal);
         } else {
-            cake.transfer(_to, _amount);
+            oreo.transfer(_to, _amount);
         }
     }
 
@@ -140,9 +140,9 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
         );
 
         address signatory = ecrecover(digest, v, r, s);
-        require(signatory != address(0), "CAKE::delegateBySig: invalid signature");
-        require(nonce == nonces[signatory]++, "CAKE::delegateBySig: invalid nonce");
-        require(now <= expiry, "CAKE::delegateBySig: signature expired");
+        require(signatory != address(0), "OREO::delegateBySig: invalid signature");
+        require(nonce == nonces[signatory]++, "OREO::delegateBySig: invalid nonce");
+        require(now <= expiry, "OREO::delegateBySig: signature expired");
         return _delegate(signatory, delegatee);
     }
 
@@ -172,7 +172,7 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
         view
         returns (uint256)
     {
-        require(blockNumber < block.number, "CAKE::getPriorVotes: not yet determined");
+        require(blockNumber < block.number, "OREO::getPriorVotes: not yet determined");
 
         uint32 nCheckpoints = numCheckpoints[account];
         if (nCheckpoints == 0) {

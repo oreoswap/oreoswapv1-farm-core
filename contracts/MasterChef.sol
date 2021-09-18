@@ -57,11 +57,11 @@ contract MasterChef is Ownable {
         IBEP20 lpToken;           // Address of LP token contract.
         uint256 allocPoint;       // How many allocation points assigned to this pool. CAKEs to distribute per block.
         uint256 lastRewardBlock;  // Last block number that CAKEs distribution occurs.
-        uint256 accCakePerShare; // Accumulated CAKEs per share, times 1e12. See below.
+        uint256 accOreoPerShare; // Accumulated CAKEs per share, times 1e12. See below.
     }
 
     // The CAKE TOKEN!
-    CakeToken public cake;
+    OreoToken public oreo;
     // The SYRUP TOKEN!
     SyrupBar public syrup;
     // Dev address.
