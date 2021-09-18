@@ -1,12 +1,17 @@
-//SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.0;
 
 import "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/BEP20.sol";
-
 import "./OreoToken.sol";
 
 // SyrupBar with Governance.
-contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
+contract MilkBar is BEP20('MilkBar Token', 'MILK') {
+    using SafeMath for uint256;
+    constructor(OreoToken _oreo) {
+        oreo = _oreo;
+    }
+
     /// @notice Creates `_amount` token to `_to`. Must only be called by the owner (MasterChef).
     function mint(address _to, uint256 _amount) public onlyOwner {
         _mint(_to, _amount);
@@ -21,15 +26,8 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
     // The OREO TOKEN!
     OreoToken public oreo;
 
-
-    constructor(
-        OreoToken _oreo
-    ) public {
-        oreo = _oreo;
-    }
-
     // Safe oreo transfer function, just in case if rounding error causes pool to not have enough oreos.
-    function safeOreoTransfer(address _to, uint256 _amount) public onlyOwner {
+    function safeoreoTransfer(address _to, uint256 _amount) public onlyOwner {
         uint256 oreoBal = oreo.balanceOf(address(this));
         if (_amount > oreoBal) {
             oreo.transfer(_to, oreoBal);
@@ -53,7 +51,7 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
         uint256 votes;
     }
 
-    /// @notice A record of votes checkpoints for each account, by index
+    /// @notice A record of votes checkpoints fimport "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/BEP20.sol";or each account, by index
     mapping (address => mapping (uint32 => Checkpoint)) public checkpoints;
 
     /// @notice The number of checkpoints for each account
@@ -140,9 +138,9 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
         );
 
         address signatory = ecrecover(digest, v, r, s);
-        require(signatory != address(0), "OREO::delegateBySig: invalid signature");
-        require(nonce == nonces[signatory]++, "OREO::delegateBySig: invalid nonce");
-        require(now <= expiry, "OREO::delegateBySig: signature expired");
+        require(signatory != address(0), "oreo::delegateBySig: invalid signature");
+        require(nonce == nonces[signatory]++, "oreo::delegateBySig: invalid nonce");
+        require(block.timestamp <= expiry, "oreo::delegateBySig: signature expired");
         return _delegate(signatory, delegatee);
     }
 
@@ -161,7 +159,7 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
     }
 
     /**
-     * @notice Determine the prior number of votes for an account as of a block number
+     * @notice Determine the prior number of voimport "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/BEP20.sol";tes for an account as of a block number
      * @dev Block number must be a finalized block or else this function will revert to prevent misinformation.
      * @param account The address of the account to check
      * @param blockNumber The block number to get the vote balance at
@@ -172,7 +170,7 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
         view
         returns (uint256)
     {
-        require(blockNumber < block.number, "OREO::getPriorVotes: not yet determined");
+        require(blockNumber < block.number, "oreo::getPriorVotes: not yet determined");
 
         uint32 nCheckpoints = numCheckpoints[account];
         if (nCheckpoints == 0) {
@@ -209,7 +207,7 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
         internal
     {
         address currentDelegate = _delegates[delegator];
-        uint256 delegatorBalance = balanceOf(delegator); // balance of underlying CAKEs (not scaled);
+        uint256 delegatorBalance = balanceOf(delegator); // balance of underlying oreos (not scaled);
         _delegates[delegator] = delegatee;
 
         emit DelegateChanged(delegator, currentDelegate, delegatee);
@@ -245,7 +243,7 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
     )
         internal
     {
-        uint32 blockNumber = safe32(block.number, "CAKE::_writeCheckpoint: block number exceeds 32 bits");
+        uint32 blockNumber = safe32(block.number, "oreo::_writeCheckpoint: block number exceeds 32 bits");
 
         if (nCheckpoints > 0 && checkpoints[delegatee][nCheckpoints - 1].fromBlock == blockNumber) {
             checkpoints[delegatee][nCheckpoints - 1].votes = newVotes;
@@ -262,9 +260,9 @@ contract SyrupBar is BEP20('SyrupBar Token', 'SYRUP') {
         return uint32(n);
     }
 
-    function getChainId() internal pure returns (uint) {
+    function getChainId() internal view returns (uint) {
         uint256 chainId;
-        assembly { chainId := chainid() }
+        assembly { chainId := chainId }
         return chainId;
     }
 }

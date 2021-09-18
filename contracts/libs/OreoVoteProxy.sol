@@ -1,4 +1,5 @@
-//SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.0;
 
 interface IBEP20 {
@@ -97,8 +98,8 @@ interface IBEP20 {
 }
 
 
-contract PancakeVoterProxy {
-    // SYRUP
+contract OreoVoterProxy {
+    // MILK
     address public constant votes = 0x009cF7bC57584b7998236eff51b98A168DceA9B0;
 
     function decimals() external pure returns (uint8) {
@@ -106,11 +107,11 @@ contract PancakeVoterProxy {
     }
 
     function name() external pure returns (string memory) {
-        return 'SYRUPVOTE';
+        return 'MILKVOTE';
     }
 
     function symbol() external pure returns (string memory) {
-        return 'SYRUP';
+        return 'MILK';
     }
 
     function totalSupply() external view returns (uint256) {
@@ -121,5 +122,5 @@ contract PancakeVoterProxy {
         return IBEP20(votes).balanceOf(_voter);
     }
 
-    constructor() public {}
+    constructor() {}
 }
