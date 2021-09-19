@@ -18,19 +18,27 @@ contract BnbStaking is Ownable {
     using SafeBEP20 for IBEP20;
 
     // Info of each user.
+        // Info of each user.
     struct UserInfo {
         uint256 amount;     // How many LP tokens the user has provided.
         uint256 rewardDebt; // Reward debt. See explanation below.
         bool inBlackList;
     }
 
-    // Info of each pool.
-    struct PoolInfo {
+    // struct UserInfo {
+    //     IBEP20 lpToken;           // Address of LP token contract.
+    //     uint256 allocPoint;       // How many allocation points assigned to this pool. Oreos to distribute per block.
+    //     uint256 lastRewardBlock;  // Last block number that Oreos distribution occurs.
+    //     uint256 accOreoPerShare; // Accumulated Oreos per share, times 1e12. See below.
+    // }
+   
+     struct PoolInfo {
         IBEP20 lpToken;           // Address of LP token contract.
         uint256 allocPoint;       // How many allocation points assigned to this pool. Oreos to distribute per block.
         uint256 lastRewardBlock;  // Last block number that Oreos distribution occurs.
         uint256 accOreoPerShare; // Accumulated Oreos per share, times 1e12. See below.
     }
+
 
     // The REWARD TOKEN          //NOTE address of Oreotoken
     IBEP20 public rewardToken;  

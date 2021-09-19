@@ -7,6 +7,8 @@ contract WBNB {
     string public symbol   = "WBNB";
     uint8  public decimals = 18;
 
+    uint256 MAX_INT = 2**256 - 1;
+
     event  Approval(address indexed src, address indexed guy, uint wad);
     event  Transfer(address indexed src, address indexed dst, uint wad);
     event  Deposit(address indexed dst, uint wad);

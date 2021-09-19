@@ -1,13 +1,13 @@
-// SPDX-License-Identifier: MIT
-
+//SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/BEP20.sol";
+import "./BEP20.sol";
 
-// OREOToken with Governance.
-contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
-    using SafeMath for uint256;
-    /// @notice Creates `_amount` token to `_to`. Must only be called by the owner (MasterChef).
+// CakeToken with Governance.
+contract OreoToken is BEP20('OreoSwap Token', 'OREO') {
+
+    /// @notice Creates `_amount` token to `_to`. Must only be called by the owner (PastryChef).
+
     function mint(address _to, uint256 _amount) public onlyOwner {
         _mint(_to, _amount);
         _moveDelegates(address(0), _delegates[_to], _amount);
@@ -19,7 +19,7 @@ contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
     // Which is copied and modified from COMPOUND:
     // https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/Comp.sol
 
-    /// @notice A record of each accounts delegate
+    //@notice A record of each accounts delegate
 
     mapping (address => address) internal _delegates;
 
@@ -51,11 +51,10 @@ contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
     /// @notice An event thats emitted when a delegate account's vote balance changes
     event DelegateVotesChanged(address indexed delegate, uint previousBalance, uint newBalance);
 
-    /**
-     * @notice Delegate votes from `msg.sender` to `delegatee`
-     * @param delegator The address to get delegatee for
-     */
-    function delegates(address delegator) external view returns (address) {
+    /**DELEGATION_TYPEHASH
+        view
+        returns (address)
+    {
         return _delegates[delegator];
     }
 
@@ -90,7 +89,7 @@ contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
             abi.encode(
                 DOMAIN_TYPEHASH,
                 keccak256(bytes(name())),
-               block.chainId,
+               block.chainid,
                 address(this)
             )
         );
@@ -188,7 +187,7 @@ contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
         internal
     {
         address currentDelegate = _delegates[delegator];
-        uint256 delegatorBalance = balanceOf(delegator); // balance of underlying OREOs (not scaled);
+        uint256 delegatorBalance = balanceOf(delegator); // balance of underlying CAKEs (not scaled);
         _delegates[delegator] = delegatee;
 
         emit DelegateChanged(delegator, currentDelegate, delegatee);
@@ -202,7 +201,7 @@ contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
                 // decrease old representative
                 uint32 srcRepNum = numCheckpoints[srcRep];
                 uint256 srcRepOld = srcRepNum > 0 ? checkpoints[srcRep][srcRepNum - 1].votes : 0;
-                uint256 srcRepNew = srcRepOld.sub(amount);
+                uint256 srcRepNew = srcRepOld - amount;
                 _writeCheckpoint(srcRep, srcRepNum, srcRepOld, srcRepNew);
             }
 
@@ -210,7 +209,7 @@ contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
                 // increase new representative
                 uint32 dstRepNum = numCheckpoints[dstRep];
                 uint256 dstRepOld = dstRepNum > 0 ? checkpoints[dstRep][dstRepNum - 1].votes : 0;
-                uint256 dstRepNew = dstRepOld.add(amount);
+                uint256 dstRepNew = dstRepOld + amount;
                 _writeCheckpoint(dstRep, dstRepNum, dstRepOld, dstRepNew);
             }
         }
@@ -241,9 +240,9 @@ contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
         return uint32(n);
     }
 
-    function getChainId() internal view returns (uint) {
-        uint256 chainId;
-        assembly { chainId := chainId }
-        return chainId;
-    }
+    // function getChainId() internal pure returns (uint) {
+    //     uint256 chainId;
+    //     assembly { chainId := chainid() }
+    //     return chainId;
+    // }
 }

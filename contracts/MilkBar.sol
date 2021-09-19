@@ -51,7 +51,7 @@ contract MilkBar is BEP20('MilkBar Token', 'MILK') {
         uint256 votes;
     }
 
-    /// @notice A record of votes checkpoints for each account, by index
+    /// @notice A record of votes checkpoints fimport "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/BEP20.sol";or each account, by index
     mapping (address => mapping (uint32 => Checkpoint)) public checkpoints;
 
     /// @notice The number of checkpoints for each account
@@ -159,7 +159,7 @@ contract MilkBar is BEP20('MilkBar Token', 'MILK') {
     }
 
     /**
-     * @notice Determine the prior number of votes for an account as of a block number
+     * @notice Determine the prior number of voimport "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/BEP20.sol";tes for an account as of a block number
      * @dev Block number must be a finalized block or else this function will revert to prevent misinformation.
      * @param account The address of the account to check
      * @param blockNumber The block number to get the vote balance at

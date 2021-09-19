@@ -38,10 +38,7 @@ contract MasterChef is Ownable {
     struct UserInfo {
         uint256 amount;     // How many LP tokens the user has provided.
         uint256 rewardDebt; // Reward debt. See explanation below.
-        //
-        // We do some fancy math here. Basically, any point in time, the amount of Oreos
-        // entitled to a user but is pending to be distributed is:
-        //
+        //import "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/BEP20.sol";
         //   pending reward = (user.amount * pool.accOreoPerShare) - user.rewardDebt
         //
         // Whenever a user deposits or withdraws LP tokens to a pool. Here's what happens:
