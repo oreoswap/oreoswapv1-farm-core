@@ -7,6 +7,7 @@ import './oreoswap-lib/IBEP20.sol';
 import './oreoswap-lib/SafeBEP20.sol';
 import './oreoswap-lib/Ownable.sol';
 
+
 import "./OreoToken.sol";
 import "./MilkBar.sol";
 
@@ -30,8 +31,9 @@ interface IMigratorChef {
 // distributed and the community can show to govern itself.
 //
 // Have fun reading it. Hopefully it's bug-free. God bless.
+
 contract PastryChef is Ownable {
-    using SafeMath for uint256;
+ath for uint256;
     using SafeBEP20 for IBEP20;
 
     // Info of each user.

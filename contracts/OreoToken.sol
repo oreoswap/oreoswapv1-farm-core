@@ -18,8 +18,8 @@ contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
     // https://github.com/yam-finance/yam-protocol/blob/master/contracts/token/YAMGovernance.sol
     // Which is copied and modified from COMPOUND:
     // https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/Comp.sol
-
     // @notice A record of each accounts delegate
+
 
     mapping (address => address) internal _delegates;
 
@@ -90,7 +90,8 @@ contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
             abi.encode(
                 DOMAIN_TYPEHASH,
                 keccak256(bytes(name())),
-               block.chainid,
+                block.chainid,
+
                 address(this)
             )
         );
