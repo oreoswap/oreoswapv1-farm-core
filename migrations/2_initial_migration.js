@@ -19,7 +19,7 @@ module.exports = async function(deployer) {
 
     const sous = await deployer.deploy(SousChef);
     await sous.deployed();
-    console.log("Sousbar Address: ", sous.address);
+    console.log("Sousbar Address: ", sous.address); 
 
 
 };
