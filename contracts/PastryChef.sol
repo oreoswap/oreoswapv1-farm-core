@@ -33,7 +33,7 @@ interface IMigratorChef {
 // Have fun reading it. Hopefully it's bug-free. God bless.
 
 contract PastryChef is Ownable {
-ath for uint256;
+    using SafeMath for uint256;
     using SafeBEP20 for IBEP20;
 
     // Info of each user.

@@ -91,7 +91,6 @@ contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
                 DOMAIN_TYPEHASH,
                 keccak256(bytes(name())),
                 block.chainid,
-
                 address(this)
             )
         );
