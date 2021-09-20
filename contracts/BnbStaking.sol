@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.0;
 
-import '@pancakeswap/pancake-swap-lib/contracts/math/SafeMath.sol';
-import '@pancakeswap/pancake-swap-lib/contracts/token/BEP20/IBEP20.sol';
-import '@pancakeswap/pancake-swap-lib/contracts/token/BEP20/SafeBEP20.sol';
-import '@pancakeswap/pancake-swap-lib/contracts/access/Ownable.sol';
+import './oreoswap-lib/SafeBEP20.sol';
+import './oreoswap-lib/IBEP20.sol';
+import './oreoswap-lib/SafeBEP20.sol';
+import './oreoswap-lib/Ownable.sol';
 
 interface IWBNB {
     function deposit() external payable;

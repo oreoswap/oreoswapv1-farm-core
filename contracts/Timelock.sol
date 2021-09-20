@@ -14,7 +14,7 @@
 pragma solidity ^0.8.0;
 
 // XXX: import "./SafeMath.sol";
-import "@pancakeswap/pancake-swap-lib/contracts/math/SafeMath.sol";
+import "./oreoswap-lib/SafeMath.sol";
 
 contract Timelock {
     using SafeMath for uint;

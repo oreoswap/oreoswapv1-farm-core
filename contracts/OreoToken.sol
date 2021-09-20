@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "@pancakeswap/pancake-swap-lib/contracts/token/BEP20/BEP20.sol";
+import "./oreoswap-lib/BEP20.sol";
 
 // OREOToken with Governance.
 contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
@@ -18,8 +18,8 @@ contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
     // https://github.com/yam-finance/yam-protocol/blob/master/contracts/token/YAMGovernance.sol
     // Which is copied and modified from COMPOUND:
     // https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/Comp.sol
+    // @notice A record of each accounts delegate
 
-    /// @notice A record of each accounts delegate
 
     mapping (address => address) internal _delegates;
 
@@ -90,7 +90,8 @@ contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
             abi.encode(
                 DOMAIN_TYPEHASH,
                 keccak256(bytes(name())),
-               block.chainId,
+                block.chainid,
+
                 address(this)
             )
         );
@@ -241,9 +242,9 @@ contract OreoToken is BEP20('OreoSwap Token', 'Oreo') {
         return uint32(n);
     }
 
-    function getChainId() internal view returns (uint) {
-        uint256 chainId;
-        assembly { chainId := chainId }
-        return chainId;
-    }
+    // function getChainId() internal view returns (uint) {
+    //     uint256 chainId;
+    //     assembly { chainId := chainId }
+    //     return chainId;
+    // }
 }
