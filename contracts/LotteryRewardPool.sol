@@ -2,23 +2,23 @@
 
 pragma solidity ^0.8.0;
 
-import '@pancakeswap/pancake-swap-lib/contracts/token/BEP20/IBEP20.sol';
-import '@pancakeswap/pancake-swap-lib/contracts/token/BEP20/SafeBEP20.sol';
-import '@pancakeswap/pancake-swap-lib/contracts/access/Ownable.sol';
+import './oreoswap-lib/IBEP20.sol';
+import './oreoswap-lib/SafeBEP20.sol';
+import './oreoswap-lib/Ownable.sol';
 
 import './PastryChef.sol';
 
 contract LotteryRewardPool is Ownable {
     using SafeBEP20 for IBEP20;
 
-    MasterChef public chef;
+    PastryChef public chef;
     address public adminAddress;
     address public receiver;
     IBEP20 public lptoken;
     IBEP20 public oreo;
 
     constructor(
-        MasterChef _chef,
+        PastryChef _chef,
         IBEP20 _oreo,
         address _admin,
         address _receiver) {
