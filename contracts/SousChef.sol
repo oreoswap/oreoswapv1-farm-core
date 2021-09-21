@@ -2,9 +2,10 @@
 
 pragma solidity ^0.8.0;
 
-import './oreoswap-lib/SafeMath.sol';
-import './oreoswap-lib/IBEP20.sol';
-import './oreoswap-lib/SafeBEP20.sol';
+import "@oreoswap/oreoswap-swap-lib/libs/token/SafeBEP20.sol";
+import "@oreoswap/oreoswap-swap-lib/libs/token/IBEP20.sol";
+import "@oreoswap/oreoswap-swap-lib/libs/math/SafeMath.sol";
+
 
 // SousChef is the chef of new tokens. He can make yummy food and he is a fair guy as well as MasterChef.
 contract SousChef {

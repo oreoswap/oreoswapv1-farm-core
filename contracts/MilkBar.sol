@@ -2,7 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-import "./oreoswap-lib/BEP20.sol";
+
+import "@oreoswap/oreoswap-swap-lib/libs/token/BEP20.sol";
 import "./OreoToken.sol";
 
 // SyrupBar with Governance.

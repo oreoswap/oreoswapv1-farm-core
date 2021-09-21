@@ -2,9 +2,10 @@
 
 pragma solidity ^0.8.0;
 
-import './oreoswap-lib/IBEP20.sol';
-import './oreoswap-lib/SafeBEP20.sol';
-import './oreoswap-lib/Ownable.sol';
+import "@oreoswap/oreoswap-swap-lib/libs/token/SafeBEP20.sol";
+import "@oreoswap/oreoswap-swap-lib/libs/token/IBEP20.sol";
+import "@oreoswap/oreoswap-swap-lib/libs/access/Ownable.sol";
+
 
 import './PastryChef.sol';
 
