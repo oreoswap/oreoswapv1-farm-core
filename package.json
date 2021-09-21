@@ -7,7 +7,7 @@
         "test": "test"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "mocha"
     },
     "keywords": [],
     "author": "",
@@ -19,6 +19,7 @@
     },
     "devDependencies": {
         "@oreoswap/oreoswap-swap-lib": "^1.0.0",
-        "truffle-hdwallet-provider": "^1.0.17"
+        "truffle-hdwallet-provider": "^1.0.17",
+        "mocha": "^8.2.1"
     }
 }
