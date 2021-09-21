@@ -18,6 +18,7 @@
         "path": "^0.12.7"
     },
     "devDependencies": {
+        "@oreoswap/oreoswap-swap-lib": "^1.0.0",
         "truffle-hdwallet-provider": "^1.0.17"
     }
 }
