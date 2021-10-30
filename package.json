@@ -13,13 +13,17 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@openzeppelin/test-helpers": "^0.5.13",
+        "@oreoswap/oreoswap-swap-lib": "^1.0.0",
         "@uniswap/lib": "^4.0.1-alpha",
         "dotenv": "^9.0.2",
-        "path": "^0.12.7"
+        "path": "^0.12.7",
+        "truffle-flattener": "^1.4.4"
     },
     "devDependencies": {
-        "@oreoswap/oreoswap-swap-lib": "^1.0.0",
-        "truffle-hdwallet-provider": "^1.0.17",
-        "mocha": "^8.2.1"
+        "chai": "^4.3.4",
+        "hardhat": "^2.6.7",
+        "mocha": "^8.2.1",
+        "truffle-hdwallet-provider": "^1.0.17"
     }
 }

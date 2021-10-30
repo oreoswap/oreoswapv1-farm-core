@@ -37,7 +37,7 @@ contract SousChef {
         uint256 accRewardPerShare; // Accumulated reward per share, times 1e12. See below.
     }
 
-    // The SYRUP TOKEN!
+    // The MILK TOKEN!
     IBEP20 public milk;
     // rewards created per block.
     uint256 public rewardPerBlock;
